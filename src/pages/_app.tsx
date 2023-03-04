@@ -1,11 +1,20 @@
 import Image from 'next/image';
 import type { AppProps } from 'next/app';
-import { Handbag } from 'phosphor-react';
+import { Handbag, X } from 'phosphor-react';
+import * as Dialog from '@radix-ui/react-dialog';
 
 import { globalStyles } from '../styles/global';
 
 import logoImg from '../assets/logo.svg';
-import { Container, Header } from '../styles/pages/app';
+import {
+  Container,
+  DialogClose,
+  DialogContent,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger,
+  Header,
+} from '../styles/pages/app';
 
 globalStyles();
 
@@ -15,9 +24,26 @@ export default function App({ Component, pageProps }: AppProps) {
       <Header>
         <Image src={logoImg} alt='' />
 
-        <button type='button'>
-          <Handbag size={24} />
-        </button>
+        <Dialog.Root>
+          <DialogTrigger type='button'>
+            {/* <button type='button'> */}
+            <Handbag size={24} />
+            {/* </button> */}
+          </DialogTrigger>
+          <Dialog.Portal>
+            <DialogOverlay />
+            <DialogContent>
+              <DialogClose>
+                <X
+                  size={24}
+                  weight='bold'
+                  aria-label='Fechar Sacola de Compras'
+                />
+              </DialogClose>
+              <DialogTitle>Sacola de compras</DialogTitle>
+            </DialogContent>
+          </Dialog.Portal>
+        </Dialog.Root>
       </Header>
 
       <Component {...pageProps} />
