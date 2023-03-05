@@ -11,10 +11,10 @@ import {
   DialogClose,
   DialogContent,
   DialogOverlay,
-  DialogTitle,
   DialogTrigger,
   Header,
 } from '../styles/pages/app';
+import { ShoppingCart } from '../components/ShoppingCart';
 
 globalStyles();
 
@@ -40,7 +40,8 @@ export default function App({ Component, pageProps }: AppProps) {
                   aria-label='Fechar Sacola de Compras'
                 />
               </DialogClose>
-              <DialogTitle>Sacola de compras</DialogTitle>
+
+              <ShoppingCart />
             </DialogContent>
           </Dialog.Portal>
         </Dialog.Root>

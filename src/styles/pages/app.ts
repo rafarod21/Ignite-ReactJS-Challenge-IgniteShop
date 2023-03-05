@@ -69,7 +69,6 @@ export const DialogContent = styled(Dialog.Content, {
   height: '100%',
   width: '30rem',
   maxWidth: '30rem',
-  padding: '2.5rem',
 
   boxShadow: '-4px 0px 30px rgba(0, 0, 0, 0.8)',
 });
@@ -90,10 +89,4 @@ export const DialogClose = styled(Dialog.Close, {
   '&:hover': {
     color: '$gray300',
   },
-});
-
-export const DialogTitle = styled(Dialog.Title, {
-  fontSize: '1.875rem',
-  lineHeight: '2.25rem',
-  fontWeight: '800',
 });
