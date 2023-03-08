@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Stripe from 'stripe';
 
+import { Header } from '../../components/Header';
+
 import { stripe } from '../../lib/stripe';
 
 import {
@@ -59,6 +61,9 @@ export default function Product({ product }: ProductProps) {
       <Head>
         <title>{product.name} | Ignite Shop</title>
       </Head>
+
+      <Header />
+
       <ProductContainer>
         <ImageContainer>
           <Image src={product.imageUrl} width={520} height={480} alt='' />
