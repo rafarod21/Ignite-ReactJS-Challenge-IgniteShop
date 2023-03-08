@@ -5,6 +5,8 @@ import Stripe from 'stripe';
 import Head from 'next/head';
 import Image from 'next/image';
 
+import logoImg from '../assets/logo.svg';
+
 import { ImageContainer, SuccessContainer } from '../styles/pages/success';
 
 interface SuccessProps {
@@ -23,9 +25,19 @@ export default function Success({ customerName, product }: SuccessProps) {
         <meta name='robots' content='noindex' />
       </Head>
       <SuccessContainer>
-        <ImageContainer>
-          <Image src={product.imageUrl} width={120} height={110} alt='' />
-        </ImageContainer>
+        <Image src={logoImg} alt='' />
+
+        <div>
+          <ImageContainer>
+            <Image src={product.imageUrl} width={120} height={110} alt='' />
+          </ImageContainer>
+          <ImageContainer>
+            <Image src={product.imageUrl} width={120} height={110} alt='' />
+          </ImageContainer>
+          <ImageContainer>
+            <Image src={product.imageUrl} width={120} height={110} alt='' />
+          </ImageContainer>
+        </div>
 
         <h1>Compra efetuada!</h1>
 
