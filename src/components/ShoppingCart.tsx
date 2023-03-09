@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import axios from 'axios';
 import Image from 'next/image';
 import { useShoppingCart } from 'use-shopping-cart';
 
@@ -13,10 +15,46 @@ import {
 import shirtImg from '../assets/Shirt.png';
 
 export function ShoppingCart() {
-  const { cartDetails, removeItem, cartCount, formattedTotalPrice } =
-    useShoppingCart();
+  const {
+    cartDetails,
+    removeItem,
+    cartCount,
+    formattedTotalPrice,
+    handleCloseCart,
+  } = useShoppingCart();
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false);
 
-  console.log(cartDetails);
+  async function handleBuyProducts() {
+    setIsCreatingCheckoutSession(true);
+
+    if (!cartDetails) return;
+
+    const products = Object.values(cartDetails);
+    const lineItems = products.map((product) => {
+      return {
+        price: product.defaultPriceId,
+        quantity: 1,
+      };
+    });
+
+    try {
+      const response = await axios.post('/api/checkout', {
+        lineItems,
+      });
+
+      const { checkoutUrl } = response.data;
+      handleCloseCart();
+
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      alert('Falha ao redirecionar ao checkout!');
+
+      setIsCreatingCheckoutSession(false);
+
+      console.log(error);
+    }
+  }
 
   return (
     <ShoppingCartContainer>
@@ -26,7 +64,7 @@ export function ShoppingCart() {
         <ProductList>
           {cartDetails &&
             Object.values(cartDetails).map((product) => (
-              <ProductContainer>
+              <ProductContainer key={product.id}>
                 <ImageContainer>
                   <Image
                     src={product.image || ''}
@@ -45,17 +83,6 @@ export function ShoppingCart() {
                 </ProductDetails>
               </ProductContainer>
             ))}
-          {/* <ProductContainer>
-            <ImageContainer>
-              <Image src={shirtImg} width={94} height={94} alt='' />
-            </ImageContainer>
-
-            <ProductDetails>
-              <span>Camiseta Beyond the Limits</span>
-              <strong>R$ 79,90</strong>
-              <button type='button'>Remover</button>
-            </ProductDetails>
-          </ProductContainer> */}
         </ProductList>
       </div>
 
@@ -69,7 +96,13 @@ export function ShoppingCart() {
           <strong>{formattedTotalPrice}</strong>
         </div>
 
-        <button>Finalizar compra</button>
+        <button
+          type='button'
+          disabled={isCreatingCheckoutSession}
+          onClick={handleBuyProducts}
+        >
+          Finalizar compra
+        </button>
       </footer>
     </ShoppingCartContainer>
   );

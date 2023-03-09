@@ -17,7 +17,7 @@ import {
   ProductDetails,
 } from '../../styles/pages/product';
 
-interface ProductProps {
+export interface ProductProps {
   product: {
     id: string;
     name: string;
@@ -33,7 +33,7 @@ export default function Product({ product }: ProductProps) {
   const { isFallback } = useRouter();
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
     useState(false);
-  const { addItem, cartDetails } = useShoppingCart();
+  const { addItem, cartDetails, setItemQuantity } = useShoppingCart();
 
   async function handleBuyProduct() {
     setIsCreatingCheckoutSession(true);
@@ -55,6 +55,13 @@ export default function Product({ product }: ProductProps) {
     }
   }
 
+  function setItemsToOne() {
+    if (!cartDetails) return;
+
+    const listProducts = Object.keys(cartDetails);
+    listProducts.forEach((product) => setItemQuantity(product, 1));
+  }
+
   function handleAddItemToShoppingCart() {
     if (cartDetails) {
       const listProducts = Object.keys(cartDetails);
@@ -71,9 +78,10 @@ export default function Product({ product }: ProductProps) {
           price: product.price,
           currency: 'BRL',
           image: product.imageUrl,
+          defaultPriceId: product.defaultPriceId,
         });
 
-        // console.log('adicionou');
+        setItemsToOne();
         alert('Item adicionado à sacola!');
       }
     } else {

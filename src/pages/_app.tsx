@@ -13,13 +13,13 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <CartProvider
-      shouldPersist={true}
       cartMode='client-only'
       mode='payment'
       stripe={`${process.env.STRIPE_PUBLIC_KEY}`}
       successUrl={successUrl}
       cancelUrl={cancelUrl}
       currency='BRL'
+      shouldPersist={true}
     >
       <Container>
         <Component {...pageProps} />
