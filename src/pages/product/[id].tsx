@@ -4,6 +4,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useShoppingCart } from 'use-shopping-cart';
 import Stripe from 'stripe';
 
 import { Header } from '../../components/Header';
@@ -21,7 +22,8 @@ interface ProductProps {
     id: string;
     name: string;
     imageUrl: string;
-    price: string;
+    formatPrice: string;
+    price: number;
     description: string;
     defaultPriceId: string;
   };
@@ -31,6 +33,7 @@ export default function Product({ product }: ProductProps) {
   const { isFallback } = useRouter();
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
     useState(false);
+  const { addItem, cartDetails } = useShoppingCart();
 
   async function handleBuyProduct() {
     setIsCreatingCheckoutSession(true);
@@ -49,6 +52,42 @@ export default function Product({ product }: ProductProps) {
       setIsCreatingCheckoutSession(false);
 
       console.log(error);
+    }
+  }
+
+  function handleAddItemToShoppingCart() {
+    if (cartDetails) {
+      const listProducts = Object.keys(cartDetails);
+
+      const productIsAlreadyInShoppingCart = listProducts.includes(product.id);
+
+      if (productIsAlreadyInShoppingCart) {
+        alert('Este produto já está na sacola.');
+      } else {
+        addItem({
+          name: product.name,
+          description: product.description,
+          id: product.id,
+          price: product.price,
+          currency: 'BRL',
+          image: product.imageUrl,
+        });
+
+        // console.log('adicionou');
+        alert('Item adicionado à sacola!');
+      }
+    } else {
+      addItem({
+        name: product.name,
+        description: product.description,
+        id: product.id,
+        price: product.price,
+        currency: 'BRL',
+        image: product.imageUrl,
+      });
+
+      // console.log('adicionou');
+      alert('Item adicionado à sacola!');
     }
   }
 
@@ -71,15 +110,15 @@ export default function Product({ product }: ProductProps) {
 
         <ProductDetails>
           <h1>{product.name}</h1>
-          <span>{product.price}</span>
+          <span>{product.formatPrice}</span>
 
           <p>{product.description}</p>
 
           <button
             disabled={isCreatingCheckoutSession}
-            onClick={handleBuyProduct}
+            onClick={handleAddItemToShoppingCart}
           >
-            Comprar agora
+            Colocar na sacola
           </button>
         </ProductDetails>
       </ProductContainer>
@@ -117,10 +156,11 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
         id: product.id,
         name: product.name,
         imageUrl: product.images[0],
-        price: new Intl.NumberFormat('pt-BR', {
+        formatPrice: new Intl.NumberFormat('pt-BR', {
           style: 'currency',
           currency: 'BRL',
         }).format(finalPrice / 100),
+        price: finalPrice,
         description: product.description,
         defaultPriceId: price.id,
       },

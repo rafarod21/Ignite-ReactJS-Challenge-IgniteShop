@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import { Handbag, X } from 'phosphor-react';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -17,7 +18,9 @@ import {
 export function Header() {
   return (
     <HeaderContainer>
-      <Image src={logoImg} alt='' />
+      <Link href='/' prefetch={false}>
+        <Image src={logoImg} alt='' />
+      </Link>
 
       <Dialog.Root>
         <DialogTrigger type='button'>
