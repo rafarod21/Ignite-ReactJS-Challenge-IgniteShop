@@ -15,13 +15,8 @@ import {
 import shirtImg from '../assets/Shirt.png';
 
 export function ShoppingCart() {
-  const {
-    cartDetails,
-    removeItem,
-    cartCount,
-    formattedTotalPrice,
-    handleCloseCart,
-  } = useShoppingCart();
+  const { cartDetails, removeItem, cartCount, formattedTotalPrice, clearCart } =
+    useShoppingCart();
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
     useState(false);
 
@@ -44,7 +39,7 @@ export function ShoppingCart() {
       });
 
       const { checkoutUrl } = response.data;
-      handleCloseCart();
+      clearCart();
 
       window.location.href = checkoutUrl;
     } catch (error) {
